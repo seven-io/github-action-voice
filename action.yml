@@ -1,0 +1,26 @@
+name: 'Sms77.io Voice'
+author: 'Sms77 e.K.'
+description: 'Send Voice message through GitHub Actions via Sms77.io'
+inputs:
+  apiKey:
+    description: 'A Sms77.io API Key. Alternatively stored in environment variable SMS77_API_KEY'
+    required: true
+  from:
+    description: 'Sender ID; A Sms77.io approved or shared number'
+    required: false
+  text:
+    description: 'The actual message content you want to send to the recipient(s)'
+    required: true
+  to:
+    description: 'Phone number'
+    required: true
+
+outputs:
+  response:
+    description: 'The API response'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
+branding:
+  color: 'green'
+  icon: 'message-square'
