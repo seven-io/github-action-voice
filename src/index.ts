@@ -1,7 +1,7 @@
 import {debug, error, getInput, setFailed, setOutput} from '@actions/core';
-import Sms77Client, {VoiceParams} from 'sms77-client';
+import SevenClient, {VoiceParams} from '@seven.io/api';
 import fetch from 'node-fetch';
-import {ok} from 'assert';
+import {ok} from 'node:assert';
 
 (global as any).fetch = fetch;
 
@@ -20,18 +20,19 @@ const send = async () => {
     debug('Sending Voice');
 
     try {
-        const apiKey = getInput('apiKey') || process.env.SMS77_API_KEY;
+        const apiKey = getInput('apiKey') || process.env.SEVEN_API_KEY;
         ok(apiKey);
 
-        const response = await (new Sms77Client(apiKey, 'github-action-voice'))
+        const response = await (new SevenClient(apiKey, 'github-action-voice'))
             .voice(voiceParams) as string;
         debug('API reached, Voice dispatch ended.');
         setOutput('API response', response);
 
         return response;
     } catch (e) {
-        error(e.message);
-        setFailed(e.message);
+        const message = (e as Error).message
+        error(message);
+        setFailed(message);
     }
 };
 

@@ -13,9 +13,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@actions/core");
-const sms77_client_1 = __importDefault(require("sms77-client"));
+const api_1 = __importDefault(require("@seven.io/api"));
 const node_fetch_1 = __importDefault(require("node-fetch"));
-const assert_1 = require("assert");
+const node_assert_1 = require("node:assert");
 global.fetch = node_fetch_1.default;
 const voiceParams = {
     from: undefined,
@@ -24,20 +24,21 @@ const voiceParams = {
 };
 const send = () => __awaiter(void 0, void 0, void 0, function* () {
     Object.keys(voiceParams)
-        .forEach(k => voiceParams[k] = core_1.getInput(k));
-    core_1.debug('Sending Voice');
+        .forEach(k => voiceParams[k] = (0, core_1.getInput)(k));
+    (0, core_1.debug)('Sending Voice');
     try {
-        const apiKey = core_1.getInput('apiKey') || process.env.SMS77_API_KEY;
-        assert_1.ok(apiKey);
-        const response = yield (new sms77_client_1.default(apiKey, 'github-action-voice'))
+        const apiKey = (0, core_1.getInput)('apiKey') || process.env.SEVEN_API_KEY;
+        (0, node_assert_1.ok)(apiKey);
+        const response = yield (new api_1.default(apiKey, 'github-action-voice'))
             .voice(voiceParams);
-        core_1.debug('API reached, Voice dispatch ended.');
-        core_1.setOutput('API response', response);
+        (0, core_1.debug)('API reached, Voice dispatch ended.');
+        (0, core_1.setOutput)('API response', response);
         return response;
     }
     catch (e) {
-        core_1.error(e.message);
-        core_1.setFailed(e.message);
+        const message = e.message;
+        (0, core_1.error)(message);
+        (0, core_1.setFailed)(message);
     }
 });
 exports.default = send;
